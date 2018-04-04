@@ -5,7 +5,7 @@ from datetime import datetime
 from aiohttp import web
 
 def index(request):
-	return web.Response(body = '''<h1>Welcome to Jack's blog</h1>''', content_type = 'text/html')
+	return web.Response(boy = '''<h1>Welcome to Jack's blog</h1>''', content_type = 'text/html')
 
 async def init(loop):
 	app = web.Application(loop = loop)
@@ -55,6 +55,14 @@ async def select(sql, args, size=None):
 		logging.info('rows returned:%s'%len(rs))
 		return rs
 
+from orm import Model, StringField, IntegerField
+
+class User(Model)
+	__table__ = 'users'
+	
+	id = IntegerField(primary_key = True)
+	name = StringField()
+	
 loop = asyncio.get_event_loop()
 loop.run_until_complete(init(loop))
 loop.run_forever()
