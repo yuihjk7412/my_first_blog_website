@@ -66,28 +66,29 @@ class Model(dict, metaclass = ModelMetaclass)
 	def __init__(self, **kw):
 		super(Model, self).__init__(**kw)
 
+#拦截点号运算。当对未定义的属性名称和实例进行点号运算时，就会用属性名作为字符串调用这个方法。如果继承树可以找到该属性，则不调用此方法
 	def __getattr__(self, key)
 		try:
 			return self[key]
 		except KeyError:
 			raise AttributeError(r"'model' object has no attribute '%s'"%key)
-			def __setattr(self, key, value):
-				self[key] = value
+	
+	def __setattr__(self, key, value):
+		self[key] = value
 
-			def getValue(self, key):
-				return getattr(self, key, None)
+	def getValue(self, key):
+		return getattr(self, key, None)
 
-			def getValueOrDefault(self, key):
-				value = getattr(self, key, None)
-				if value is None:
-					field = self.__mappings__[key]
-					if field.default is not None:
-						value = field.default() if callable(field.default) else field.default
-						logging.debug('using default value for %s:%s'%(key,str(value)))
-						setattr(self, key, value)
-						return value
-				pass
-				pass
+	def getValueOrDefault(self, key):
+		value = getattr(self, key, None)
+		if value is None:
+			field = self.__mappings__[key]
+			if field.default is not None:
+				value = field.default() if callable(field.default) else field.default
+				logging.debug('using default value for %s:%s'%(key,str(value)))
+				setattr(self, key, value)
+		return value
+
 loop = asyncio.get_event_loop()
 loop.run_until_complete(init(loop))
 loop.run_forever()
