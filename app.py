@@ -1,6 +1,7 @@
 import logging; logging.basicConfig(level = logging.INFO)
 import asyncio, os, json, time, aiomysql, MySQLdb
-from datetime import datetime 
+from datetime import datetime
+from orm import Model, StringField, IntegerField 
 
 from aiohttp import web
 
@@ -55,14 +56,13 @@ async def select(sql, args, size=None):
 		logging.info('rows returned:%s'%len(rs))
 		return rs
 
-from orm import Model, StringField, IntegerField
-
-class User(Model)
+class  User(Model)
 	__table__ = 'users'
 	
 	id = IntegerField(primary_key = True)
 	name = StringField()
-	
+
+class Model(dict, metaclass = ModelMetaclass)
 loop = asyncio.get_event_loop()
 loop.run_until_complete(init(loop))
 loop.run_forever()
